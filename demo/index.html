@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Collaborative Textarea Demo</title>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.3.2/peerjs.min.js" integrity="sha512-4wTQ8feow93K3qVGVXUGLULDB9eAULiG+xdbaQH8tYZlXxYv9ij+evblXD0EOqmGWT8NBTd1vQGsURvrQzmKeg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/automerge@1.0.1-preview.6/src/automerge.min.js"></script>
+    <script src="../dist/main.js"></script>
+
+
+    <style>
+        html,
+        body {
+            margin: 0px;
+            padding: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: #21252A;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #textarea {
+            border: none;
+            width: 50%;
+            height: 50%;
+        }
+        
+        input {
+            text-align: center;
+        }
+        
+        div {
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        i:hover {
+            color: greenyellow
+        }
+    </style>
+
+
+
+</head>
+
+<body>
+    <div>
+        <span style="font-weight:bold; font-size:20pt">Your id:</span>
+        <span id="id"></span>
+        <i class="far fa-copy fa-2x" onclick="navigator.clipboard.writeText(document.getElementById('id').textContent);"></i>
+    </div>
+    <div>
+        <input id="host" size="27" type="text"></input>
+        <button onclick="connect();">Connect</button>
+    </div>
+    <textarea id="textarea"></textarea>
+
+    <script>
+        collaborativeTextarea.init({
+            textarea: document.getElementById('textarea'),
+            onOpen: onOpen,
+        });
+
+        function onOpen(id) {
+            document.getElementById('id').textContent = id;
+        }
+
+        function connect() {
+            //ensure that the textarea is empty
+            if (document.getElementById('textarea').value == "")
+                collaborativeTextarea.connect(document.getElementById('host').value);
+            else alert("Clear your editor before connecting")
+        }
+
+        //just clearing the textarea
+        window.onload = function() {
+            document.getElementById("textarea").value = "";
+            document.getElementById("host").value = "";
+        }
+    </script>
+</body>
+
+</html>
