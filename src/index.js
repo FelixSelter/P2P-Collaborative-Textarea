@@ -26,7 +26,7 @@ function update(e) {
     //update document
 
     //TODO: What if the user has something selected when deleting or inserting
-    connectionService.changeDoc((doc) => {
+    connectionService.changeDoc('Update text', (doc) => {
         switch (e.inputType) {
             case 'insertText':
                 insertAt(doc.text, e.data);

@@ -2,6 +2,10 @@
 // import { peerjs } from 'peerjs';
 const Peer = peerjs.Peer;
 
+var debug = function() {
+    //console.log(new Date().getTime(), ...arguments);
+};
+
 export default class ConnectionService {
     peer;
     connections = new Map();
@@ -13,6 +17,8 @@ export default class ConnectionService {
         this.peer = new Peer();
         this.peer.on('open', onOpen);
         this.peer.on('connection', (conn) => {
+            debug('Received connection from', conn.peer);
+
             conn.on('data', (data) => {
                 this.receiveHandler(conn, data); //arrow function to keep this reference
             });
@@ -23,41 +29,58 @@ export default class ConnectionService {
     }
 
     changeDoc(msg, callback) {
+        debug('Changing', msg);
         this.doc = Automerge.change(this.doc, msg, callback);
         this.sync();
     }
 
     connect(peerId) {
+        debug('Connecting to', peerId);
+
         let conn = this.peer.connect(peerId);
         conn.on('data', (data) => {
             this.receiveHandler(conn, data); //arrow function to keep this reference
         });
         this.connections.set(conn, Automerge.initSyncState());
+
+        conn.on('open', () => {
+            conn.send({ type: 'SyncRequest' });
+        });
     }
 
     sync() {
-        for (let [peer, state] of this.connections.entries()) {
+        for (let [conn, state] of this.connections.entries()) {
+            debug('Syncing with', conn.peer);
+
             let msg = null;
             [state, msg] = Automerge.generateSyncMessage(this.doc, state);
-            this.connections.set(peer, state);
-            if (msg) peer.send({ type: 'changes', data: ToBase64(msg) });
+            this.connections.set(conn, state);
+            if (msg) conn.send({ type: 'Changes', data: ToBase64(msg) });
+            else debug('Sync not neccessary');
         }
     }
 
-    receiveHandler(peer, data) {
+    receiveHandler(conn, data) {
+        debug('Receiving information from', conn.peer);
+
         switch (data.type) {
-            case 'changes':
+            case 'Changes':
+                debug('Applying changes');
+
                 data.data = new Uint8Array(FromBase64(data.data));
                 let state = null;
                 [this.doc, state] = Automerge.receiveSyncMessage(
                     this.doc,
-                    this.connections.get(peer),
+                    this.connections.get(conn),
                     data.data
                 );
-                this.connections.set(peer, state);
+                this.connections.set(conn, state);
                 this.sync();
                 this.afterChangeCallback(this.doc);
                 break;
+
+            case 'SyncRequest':
+                this.sync();
 
             default:
                 break;
