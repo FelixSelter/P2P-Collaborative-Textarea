@@ -3,7 +3,7 @@ This library lets you specify a textarea that will be synced using peerjs.
 It is planned to add visuals like showing where the cursors of other people are
 
 ## Demo
-https://felixselter.github.io/Collaborative-Textarea/  
+https://felixselter.github.io/P2P-Collaborative-Textarea/  
 This is using the index.html in this repo
 
 ## Using this
