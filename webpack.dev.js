@@ -2,7 +2,7 @@ export default {
     mode: 'development',
     entry: '/src/index.js',
     output: {
-        filename: '[name].js',
+        filename: 'CollaborativeTextarea.dev.js',
         library: 'collaborativeTextarea',
         libraryTarget: 'umd',
     },

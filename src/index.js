@@ -1,10 +1,30 @@
-import * as Automerge from 'automerge';
-import { peerjs } from 'peerjs';
-const Peer = peerjs.Peer;
+import ConnectionService from './ConnectionService.js';
 
-export function update(e) {
+var connectionService;
+var textarea;
+var initialized = false;
+
+export function init(options) {
+    connectionService = new ConnectionService(options.onOpen, updateTextContent, {
+        text: [],
+    });
+
+    textarea = options.textarea;
+    textarea.oninput = update;
+    initialized = true;
+}
+
+export function connect(peerId) {
+    if (!initialized) throw new Error('Make sure to call init before.');
+    if (textarea.value != '')
+        throw new Error('Ensure that the textarea is empty before connecting');
+
+    connectionService.connect(peerId);
+}
+
+function update(e) {
     //update document
-    textDoc = Automerge.change(textDoc, (doc) => {
+    connectionService.changeDoc((doc) => {
         switch (e.inputType) {
             case 'insertText':
                 insertAt(doc.text, e.data);
@@ -23,72 +43,6 @@ export function update(e) {
                 break;
         }
     });
-    sync();
-}
-
-export function connect(peerId) {
-    if (!initialized) throw new Error('Make sure to call init before.');
-    if (textarea.value != '')
-        throw new Error('Ensure that the textarea is empty before connecting');
-
-    let conn = peer.connect(peerId);
-    conn.on('data', receiveHandler);
-    connections.push(conn);
-}
-
-function sync() {
-    let msg = null;
-    [state, msg] = Automerge.generateSyncMessage(textDoc, state);
-    if (!msg) return;
-    broadcast({ type: 'update', data: ToBase64(msg) });
-}
-
-function receiveHandler(data) {
-    switch (data.type) {
-        case 'update':
-            data.data = new Uint8Array(FromBase64(data.data));
-            [textDoc, state] = Automerge.receiveSyncMessage(
-                textDoc,
-                state,
-                data.data
-            );
-            sync();
-            updateTextContent();
-            break;
-
-        default:
-            break;
-    }
-}
-
-var peer;
-var connections = [];
-var textarea;
-var textDoc;
-var initialized = false;
-var state;
-
-export function init(options) {
-    peer = new Peer();
-    peer.on('open', options.onOpen);
-    peer.on('connection', (conn) => {
-        conn.on('data', receiveHandler);
-        connections.push(conn);
-    });
-
-    textDoc = Automerge.from({ text: [] });
-    state = Automerge.initSyncState();
-
-    textarea = options.textarea;
-    textarea.oninput = update;
-    initialized = true;
-}
-
-function broadcast(msg) {
-    //send update via peerjs
-    connections.forEach((conn) => {
-        conn.send(msg);
-    });
 }
 
 /**
@@ -105,25 +59,13 @@ function insertAt(remote, value) {
     else remote.push(value);
 }
 
-function updateTextContent() {
+function updateTextContent(doc) {
     let start = textarea.selectionStart;
     let end = textarea.selectionEnd;
     textarea.value = '';
-    textDoc.text.forEach((text) => {
+    doc.text.forEach((text) => {
         textarea.value += text;
     });
     textarea.selectionStart = start;
     textarea.selectionEnd = end;
-}
-
-function ToBase64(u8) {
-    return btoa(String.fromCharCode.apply(null, u8));
-}
-
-function FromBase64(str) {
-    return atob(str)
-        .split('')
-        .map(function(c) {
-            return c.charCodeAt(0);
-        });
 }
