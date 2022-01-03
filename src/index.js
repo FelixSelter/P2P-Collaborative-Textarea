@@ -24,6 +24,8 @@ export function connect(peerId) {
 
 function update(e) {
     //update document
+
+    //TODO: What if the user has something selected when deleting or inserting
     connectionService.changeDoc((doc) => {
         switch (e.inputType) {
             case 'insertText':
@@ -37,6 +39,10 @@ function update(e) {
             case 'deleteContentBackward': //Fall through
             case 'deleteContentForward':
                 doc.text.splice(textarea.selectionStart, 1);
+                break;
+
+                //TODO:
+            case 'insertFromPaste':
                 break;
 
             default:
