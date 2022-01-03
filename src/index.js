@@ -23,8 +23,6 @@ export function connect(peerId) {
 }
 
 function update(e) {
-    //update document
-
     //TODO: What if the user has something selected when deleting or inserting
     connectionService.changeDoc('Update text', (doc) => {
         switch (e.inputType) {
