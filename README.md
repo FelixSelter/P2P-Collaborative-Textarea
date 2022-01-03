@@ -1,6 +1,7 @@
 # Collaborative-Textarea
 Simply add the multi user p2p functionality to your textarea.
-
+View the minimal demo here:
+https://felixselter.github.io/Collaborative-Textarea/
 # This is not a Beta. Its in development and important features are missing. Its not working !!!
 
 If you want to use this you have to download the repository. Then install all dependencies with `npm install --also=dev`   
@@ -16,7 +17,7 @@ Its as easy as calling:
         textarea: document.getElementById('textarea'),
         });
 ```
-Whe you call this it will create a peer object. You most likely want to show the id to the user so he can connect to other peers. therefore you can parse a onopen funtion
+When you call this it will create a peer object. You most likely want to show the id to the user so he can connect to other peers. therefore you can parse a onopen funtion
 
 ```js
  collaborativeTextarea.init({
@@ -29,7 +30,7 @@ Whe you call this it will create a peer object. You most likely want to show the
 
 When your user wants to connect to someone else simply call the connect function. Make sure that the textarea is empty.
 ```js
-function connect() {
+function connectButtonClick() {
     //ensure that the textarea is empty
     if (document.getElementById('textarea').value == "")
         collaborativeTextarea.connect(document.getElementById('host').value);
