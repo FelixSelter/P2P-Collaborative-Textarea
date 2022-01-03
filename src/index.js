@@ -10,7 +10,7 @@ export function init(options) {
     });
 
     textarea = options.textarea;
-    textarea.oninput = update;
+    textarea.addEventListener('beforeinput', update);
     initialized = true;
 }
 
@@ -23,25 +23,43 @@ export function connect(peerId) {
 }
 
 function update(e) {
-    //TODO: What if the user has something selected when deleting or inserting
     connectionService.changeDoc('Update text', (doc) => {
         switch (e.inputType) {
             case 'insertText':
-                insertAt(doc.text, e.data);
-                break;
+                {
+                    deleteSelection(doc.text);
+                    insertAt(doc.text, e.data);
+                    break;
+                }
 
             case 'insertLineBreak':
-                insertAt(doc.text, '\n');
-                break;
+                {
+                    deleteSelection(doc.text);
+                    insertAt(doc.text, '\n');
+                    break;
+                }
+            case 'deleteContentBackward':
+                {
+                    if (!deleteSelection(doc.text))
+                        doc.text.splice(textarea.selectionStart - 1, 1);
+                    break;
+                }
 
-            case 'deleteContentBackward': //Fall through
             case 'deleteContentForward':
-                doc.text.splice(textarea.selectionStart, 1);
-                break;
-
-                //TODO:
+                {
+                    if (!deleteSelection(doc.text))
+                        doc.text.splice(textarea.selectionStart, 1);
+                    break;
+                }
             case 'insertFromPaste':
-                break;
+                {
+                    deleteSelection(doc.text);
+                    e.data
+                    .split('')
+                    .reverse()
+                    .forEach((char) => insertAt(doc.text, char));
+                    break;
+                }
 
             default:
                 break;
@@ -51,16 +69,29 @@ function update(e) {
 
 /**
  * Inserts a character at the position of the textarea cursor into the automerge document
- * @param {Array} remote The text array of the automerge document
+ * @param {Array} text The text array of the automerge document
  * @param {String} value The text you want to insert
  */
-function insertAt(remote, value) {
+function insertAt(text, value) {
     //the position where the text is inserted
-    let index = textarea.selectionStart - 1;
+    let index = textarea.selectionStart;
 
     //insert at cursor
-    if (index < remote.length) remote.insertAt(index, value);
-    else remote.push(value);
+    if (index < text.length) text.insertAt(index, value);
+    else text.push(value);
+}
+
+function deleteSelection(text) {
+    //if something is selected
+    if (textarea.selectionEnd - textarea.selectionStart != 0) {
+        //delete operation
+        text.splice(
+            textarea.selectionStart,
+            textarea.selectionEnd - textarea.selectionStart
+        );
+        return true;
+    }
+    return false;
 }
 
 function updateTextContent(doc) {

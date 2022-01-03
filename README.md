@@ -1,7 +1,6 @@
 # Collaborative-Textarea
-Simply add the multi user p2p functionality to your textarea.  
-
-# This is not a Beta. Its in development and important features are missing. Its not working !!!
+This library lets you specify a textarea that will be synced using peerjs.  
+It is planned to add visuals like showing where the cursors of other people are
 
 ## Demo
 https://felixselter.github.io/Collaborative-Textarea/  
