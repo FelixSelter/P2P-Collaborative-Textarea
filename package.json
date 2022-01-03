@@ -1,18 +1,34 @@
 {
-    "name": "collaborative-textarea",
+    "name": "p2p-collaborative-textarea",
     "version": "1.0.0",
-    "type": "module",
     "description": "Simply add the multi user p2p functionality to your textarea",
+    "type": "module",
     "main": "src/index.js",
-    "scripts": {
-        "publish": "webpack --config webpack.prod.js ",
-        "build": "webpack --config webpack.dev.js",
-        "autobuild": "webpack --config webpack.dev.js --watch"
+    "files": [
+        "dist"
+    ],
+    "dependencies": {
+        "automerge": "^1.0.1-preview.6",
+        "peerjs": "^1.3.2"
     },
-    "keywords": [],
-    "author": "FelixSelter",
-    "license": "ISC",
     "devDependencies": {
         "webpack-cli": "^4.9.1"
-    }
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build:dev": "webpack",
+        "build:prod": "webpack --mode=production",
+        "autobuild": "webpack --watch",
+        "prepublishOnly": "webpack --mode=production"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/FelixSelter/P2P-Collaborative-Textarea.git"
+    },
+    "author": "FelixSelter",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/FelixSelter/P2P-Collaborative-Textarea/issues"
+    },
+    "homepage": "https://github.com/FelixSelter/P2P-Collaborative-Textarea#readme"
 }

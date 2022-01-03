@@ -1,6 +1,5 @@
-// import * as Automerge from 'automerge';
-// import { peerjs } from 'peerjs';
-const Peer = peerjs.Peer;
+import * as Automerge from 'automerge';
+import { Peer } from 'peerjs';
 
 var debug = function() {
     //console.log(new Date().getTime(), ...arguments);
