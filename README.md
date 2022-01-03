@@ -4,7 +4,7 @@ Simply add the multi user p2p functionality to your textarea.
 # This is not a Beta. Its in development and important features are missing. Its not working !!!
 
 If you want to use this you have to download the repository. Then install all dependencies with `npm install --also=dev`   
-Generate the browser version using `npm run build`  
+Generate the browser version using `npm run publish`  
 You can find it in dist/CollaborativeTextarea.prod.js  
 This runs using the latest version of automerge (They still have to fix their cdn) not like all the others. You can also implement it way easier.
 
