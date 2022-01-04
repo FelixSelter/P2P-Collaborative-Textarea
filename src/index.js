@@ -13,9 +13,11 @@ export function init(options) {
     textarea = options.textarea;
     updateCallback = options.onUpdate || function() {};
 
-    connectionService.changeDoc('Update text', (doc) => {
-        textarea.value.split('').forEach((char) => insertAt(doc.text, char));
-    });
+    if (textarea.value != '') {
+        connectionService.changeDoc('Set initial state', (doc) => {
+            doc.text = textarea.value.split('');
+        });
+    }
 
     textarea.addEventListener('beforeinput', update);
     initialized = true;

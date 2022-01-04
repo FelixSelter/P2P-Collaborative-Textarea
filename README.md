@@ -55,7 +55,7 @@ To include this library load the dependencies first:
 `https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.3.2/peerjs.min.js`  
 `https://cdn.jsdelivr.net/npm/automerge@1.0.1-preview.0/dist/automerge.min.js`  
 Then load this library itself:  
-`https://cdn.jsdelivr.net/gh/FelixSelter/P2P-Collaborative-Textarea/dist/CollaborativeTextarea.js`
+`WILL BE ADDED SOON`
 
 You can also use npm:  
 `npm install p2p-collaborative-textarea`  

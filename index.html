@@ -65,6 +65,9 @@
         collaborativeTextarea.init({
             textarea: document.getElementById('textarea'),
             onOpen: onOpen,
+            onUpdate: function() {
+                console.log("there was an update")
+            }
         });
 
         function onOpen(id) {

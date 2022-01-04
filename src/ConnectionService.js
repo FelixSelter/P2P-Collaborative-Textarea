@@ -2,7 +2,7 @@ import * as Automerge from 'automerge';
 import { Peer } from 'peerjs';
 
 var debug = function() {
-    //console.log(new Date().getTime(), ...arguments);
+    if (window.debug === true) console.log(new Date().getTime(), ...arguments);
 };
 
 export default class ConnectionService {
@@ -28,8 +28,11 @@ export default class ConnectionService {
     }
 
     changeDoc(msg, callback) {
-        debug('Changing', msg);
+        debug('Changing:', msg, this.doc.text);
+
         this.doc = Automerge.change(this.doc, msg, callback);
+        debug('After changes:', this.doc.text);
+
         this.sync();
     }
 
@@ -65,7 +68,7 @@ export default class ConnectionService {
 
         switch (data.type) {
             case 'Changes':
-                debug('Applying changes');
+                debug('Applying changes to:', this.doc.text);
 
                 data.data = new Uint8Array(FromBase64(data.data));
                 let state = null;
@@ -74,6 +77,9 @@ export default class ConnectionService {
                     this.connections.get(conn),
                     data.data
                 );
+
+                debug('After changes:', this.doc.text);
+
                 this.connections.set(conn, state);
                 this.sync();
                 this.afterChangeCallback(this.doc);
