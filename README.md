@@ -32,7 +32,7 @@ collaborativeTextarea.init({
     textarea: document.getElementById('textarea'),
     onOpen: function(id) {
         document.getElementById('id').textContent = id;
-    }
+    },
     onUpdate: function(){
         renderMarkdown();
     }
@@ -45,7 +45,7 @@ function onConnectButtonClick() {
     //ensure that the textarea is empty
     if (document.getElementById('textarea').value == "")
         collaborativeTextarea.connect(document.getElementById('host').value);
-    else alert("Clear your editor before connecting"):
+    else alert("Clear your editor before connecting");
 }
 ```
 
