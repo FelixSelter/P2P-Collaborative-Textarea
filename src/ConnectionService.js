@@ -37,7 +37,6 @@ export default class ConnectionService {
         debug('Connecting to', peerId);
 
         let conn = this.peer.connect(peerId);
-        console.log(conn);
 
         conn.on('open', () => {
             this.connections.set(conn, Automerge.initSyncState());
