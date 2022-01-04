@@ -2,6 +2,7 @@ import ConnectionService from './ConnectionService.js';
 
 var connectionService;
 var textarea;
+var updateCallback;
 var initialized = false;
 
 export function init(options) {
@@ -10,6 +11,7 @@ export function init(options) {
     });
 
     textarea = options.textarea;
+    updateCallback = options.onUpdate || function() {};
     textarea.addEventListener('beforeinput', update);
     initialized = true;
 }
@@ -103,4 +105,5 @@ function updateTextContent(doc) {
     });
     textarea.selectionStart = start;
     textarea.selectionEnd = end;
+    updateCallback();
 }

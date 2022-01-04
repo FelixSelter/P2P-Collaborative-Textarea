@@ -37,13 +37,15 @@ export default class ConnectionService {
         debug('Connecting to', peerId);
 
         let conn = this.peer.connect(peerId);
-        conn.on('data', (data) => {
-            this.receiveHandler(conn, data); //arrow function to keep this reference
-        });
-        this.connections.set(conn, Automerge.initSyncState());
+        console.log(conn);
 
         conn.on('open', () => {
+            this.connections.set(conn, Automerge.initSyncState());
             conn.send({ type: 'SyncRequest' });
+        });
+
+        conn.on('data', (data) => {
+            this.receiveHandler(conn, data); //arrow function to keep this reference
         });
     }
 

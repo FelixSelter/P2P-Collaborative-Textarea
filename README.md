@@ -13,13 +13,28 @@ collaborativeTextarea.init({
     textarea: document.getElementById('textarea'),
 });
 ```
-When you call this it will create a peer object. You most likely want to show the id to the user so he can connect to other peers. therefore you can specify an onopen callback
+When you call this it will create a peer object. You most likely want to show the id to the user so he can connect to other peers. Therefore you can specify an onopen callback
 
 ```js
 collaborativeTextarea.init({
     textarea: document.getElementById('textarea'),
     onOpen: function(id) {
         document.getElementById('id').textContent = id;
+    }
+});     
+```
+
+Theres an onUpdate event as well.  
+Maybe you need to highlight the syntax whenever someone changes something.  
+Or maybe you build a markdown editor and you need to rerender the preview.
+```js
+collaborativeTextarea.init({
+    textarea: document.getElementById('textarea'),
+    onOpen: function(id) {
+        document.getElementById('id').textContent = id;
+    }
+    onUpdate: function(){
+        renderMarkdown();
     }
 });     
 ```
